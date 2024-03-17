@@ -1,48 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-
-/* App.css */
 
 @keyframes fadeIn {
   0% { opacity: 0; }
@@ -53,6 +8,7 @@
   position: relative; /* Устанавливаем позицию как относительную */
   z-index: 1; /* Устанавливаем z-index для текста и синего прямоугольника */
   animation: fadeIn 1s ease-in-out; /* Применяем эффект появления */
+
 }
 
 @keyframes moveCloud {
@@ -83,7 +39,7 @@
   background: url('https://static.vecteezy.com/system/resources/previews/022/093/908/non_2x/cloud-icon-in-flat-style-free-png.png') repeat-x;
   background-size: 50%;
   animation: moveCloud 20s linear infinite;
-  z-index: 0; /* Устанавливаем меньший z-index для верхнего облака */
+  z-index: -1; /* Устанавливаем меньший z-index для верхнего облака */
 }
 
 .bottom-cloud {
@@ -95,8 +51,75 @@
   background: url('https://static.vecteezy.com/system/resources/previews/022/093/908/non_2x/cloud-icon-in-flat-style-free-png.png') repeat-x;
   background-size: 50%;
   animation: moveCloud 20s linear infinite;
-  z-index: 0; /* Устанавливаем меньший z-index для нижнего облака */
+  z-index: -1; /* Устанавливаем меньший z-index для нижнего облака */
 }
-.heading {
-  margin-top: 100px; /* Задаем верхний отступ */
+/* App.css */
+
+.weather-container {
+  width: 500px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 435%;
+  transform: translate(-50%, -50%);
+}
+
+.weather-heading {
+  font-size: 4em;
+  margin-bottom: 20px;
+}
+
+.weather-select {
+  width: 200px;
+  margin-right: 10px;
+}
+
+.weather-button {
+  background-color: #007bff; /* Цвет фона кнопки */
+  color: white; /* Цвет текста кнопки */
+  border: none; /* Убираем границу кнопки */
+  padding: 10px 20px; /* Отступы внутри кнопки */
+  cursor: pointer; /* Изменяем курсор при наведении */
+  border-radius: 5px; /* Скругляем углы кнопки */
+}
+/* App.css */
+
+.weather-temperature {
+  font-family: 'Arial', sans-serif; /* Пример изменения шрифта для температуры */
+  font-size: 2em;
+}
+
+.weather-description {
+  font-family: 'Roboto', sans-serif; /* Пример изменения шрифта для описания погоды */
+  font-size: 2em;
+}
+.weather-button:hover {
+  background-color: #0056b3; /* Цвет фона кнопки при наведении */
+}
+
+
+
+.refresh-button {
+  background-color: #007bff; /* Цвет фона кнопки */
+  color: white; /* Цвет текста кнопки */
+  border: none; /* Убираем границу кнопки */
+  padding: 10px 20px; /* Отступы внутри кнопки */
+  cursor: pointer; /* Изменяем курсор при наведении */
+  border-radius: 5px; /* Скругляем углы кнопки */
+}
+.refresh-button:hover {
+  background-color: #0056b3; /* Цвет фона кнопки при наведении */
+}
+
+.video-background {
+  filter: invert(1);
+  z-index: -1; /* Устанавливаем меньший z-index для нижнего облака */
+}
+.site-layout-content {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.site-layout-content.exiting {
+  opacity: 0;
 }

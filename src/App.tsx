@@ -1,78 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Layout from "./components/Layout.tsx";
-import SelectComponent from "./components/SelectComponent.tsx";
-import { fetchCountries } from "./countryService";
-import { fetchWeatherData } from "./weatherService";
+import WeatherComponent from "./components/WeatherComponent.tsx";
+import FlagComponent from './FlagComponent';
+import NumberFactsComponent from './components/NumberFactsComponent'; // Импортируем компоненту NumberFactsComponent
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
-    const [countries, setCountries] = useState<string[]>([]);
-    const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
     const [weatherData, setWeatherData] = useState<any>(null);
-    const [isWeatherChecked, setIsWeatherChecked] = useState(false);
 
-    useEffect(() => {
-        const getCountries = async () => {
-            const countriesList = await fetchCountries();
-            setCountries(countriesList);
-        };
-
-        getCountries();
-    }, []);
-
-    const handleCountrySelect = (country: string) => {
-        setSelectedCountry(country);
+    const handleWeatherChecked = (data: any) => {
+        setWeatherData(data);
     };
-
-    const handleWeatherCheck = async () => {
-        console.log('Нажата кнопка "Проверить погоду"');
-        try {
-            if (selectedCountry) {
-                const weatherResponse = await fetchWeatherData(selectedCountry);
-                setWeatherData(weatherResponse);
-                setIsWeatherChecked(true);
-                console.log('Установлен флаг isWeatherChecked в true');
-            } else {
-                console.error('Не выбрана страна');
-                // Добавьте обработку случая, когда не выбрана страна
-            }
-        } catch (error) {
-            console.error('Ошибка при получении данных о погоде:', error);
-            // Обработка ошибки при получении данных о погоде
-        }
-    };
-
-    const handleBackToMainMenu = () => {
-        console.log('Нажата кнопка "Назад к выбору страны"');
-        setSelectedCountry(null);
-        setIsWeatherChecked(false);
-        console.log('Сброшены состояния selectedCountry и isWeatherChecked');
-    };
-
 
     return (
-        <div className="LayoutContainer">
-            <Layout>
-                {isWeatherChecked && weatherData ? (
-                    <>
-                        <h1>Погода в {selectedCountry}</h1>
-                        <div>
-                            <p>Температура: {weatherData.main.temp}°C</p>
-                            <p>Описание: {weatherData.weather[0].description}</p>
-                        </div>
-                        <button onClick={handleBackToMainMenu}>Назад к выбору страны</button>
-                    </>
-                ) : (
-                    <>
-                        <h1 className="heading">Выберите страну и проверьте погоду</h1>
-                        <div>
-                            <SelectComponent label="Выберите страну" options={countries} onSelect={handleCountrySelect} />
-                        </div>
-                        <button onClick={handleWeatherCheck}>Проверить погоду</button>
-                    </>
-                )}
-            </Layout>
-        </div>
+        <Router>
+            <div className="LayoutContainer">
+                <Layout>
+                    <Switch>
+                        <Route exact path="/">
+                            {weatherData ? (
+                                <div className="weather-container">
+                                    <h1 className="weather-heading">Погода в {weatherData.name}</h1>
+                                    <div>
+                                        <p className="weather-temperature">Температура: {weatherData.main.temp}°C</p>
+                                        <p className="weather-description">Описание: {weatherData.weather[0].description}</p>
+                                        <FlagComponent country={weatherData.sys.country} />
+                                    </div>
+                                    <button className="weather-button" onClick={() => setWeatherData(null)}>Назад к выбору страны</button>
+                                </div>
+                            ) : (
+                                <WeatherComponent onWeatherChecked={handleWeatherChecked} />
+                            )}
+                        </Route>
+                        <Route path="/number-facts">
+                            <NumberFactsComponent /> {/* Добавляем компоненту NumberFactsComponent в маршрут */}
+                        </Route>
+                    </Switch>
+                </Layout>
+            </div>
+        </Router>
     );
 }
 
