@@ -1,57 +1,54 @@
 // Layout.tsx
 
-import React, { ReactNode, useEffect, useState } from 'react';
-import { CssBaseline, Container, AppBar, Toolbar, Typography } from '@mui/material';
-import './../App.css'; // Импортируем стиль с облаком
+import React, { useState } from 'react';
+import { Layout as AntLayout, Menu } from 'antd';
+import { NavLink, useLocation } from 'react-router-dom';
+import {
+    CloudOutlined,
+    ReadOutlined,
+    CameraOutlined,
+} from '@ant-design/icons';
+import './../App.css';
 
-interface LayoutProps {
-    children: ReactNode;
-}
+const { Header, Content, Footer, Sider } = AntLayout;
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const items = [
+    { key: '1', icon: <CloudOutlined />, label: 'Погода', to: '/' },
+    { key: '2', icon: <ReadOutlined />, label: 'Интересные факты', to: '/number-facts' },
+    { key: '3', icon: <CameraOutlined />, label: 'Фотографии', to: '/photos' },
+];
+
+const Layout: React.FC = ({ children }) => {
     const [showCloud, setShowCloud] = useState(false);
-    const [showBottomCloud, setShowBottomCloud] = useState(false);
+    const location = useLocation();
 
-    useEffect(() => {
-        // Устанавливаем задержку перед отображением верхнего облака
-        const timeout1 = setTimeout(() => {
-            setShowCloud(true);
-        }, 1000); // 1000 миллисекунд (1 секунда)
-
-        // Устанавливаем задержку перед отображением нижнего облака
-        const timeout2 = setTimeout(() => {
-            setShowBottomCloud(true);
-        }, 3000); // 3000 миллисекунд (3 секунды), с учетом задержки для верхнего облака
-
-        // Очищаем таймауты, чтобы избежать утечек памяти
-        return () => {
-            clearTimeout(timeout1);
-            clearTimeout(timeout2);
-        };
-    }, []);
+    // Отображать облако только на главной странице
+    React.useEffect(() => {
+        setShowCloud(location.pathname === '/');
+    }, [location]);
 
     return (
-        <>
-            <CssBaseline />
-            {/* Верхнее облако */}
+        <AntLayout style={{ minHeight: '100vh' }}>
             {showCloud && (
                 <div className="cloud-container top-cloud" />
             )}
-            {/* Нижнее облако */}
-            {showBottomCloud && (
-                <div className="cloud-container bottom-cloud" />
-            )}
-            <div className="LayoutContainer">
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography variant="h6" style={{ margin: 'auto', fontSize: '110px' }}>TWeb Lab Layout</Typography>
-                    </Toolbar>
-                </AppBar>
-                <Container>
-                    {children}
-                </Container>
-            </div>
-        </>
+            <Sider collapsible={false}>
+                <div className="logo" />
+                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                    {items.map(item => (
+                        <Menu.Item key={item.key} icon={item.icon}>
+                            <NavLink to={item.to}>{item.label}</NavLink>
+                        </Menu.Item>
+                    ))}
+                </Menu>
+            </Sider>
+            <AntLayout className="site-layout">
+                <Header className="site-layout-background" style={{ padding: 0 }} />
+                <Content style={{ margin: '0 16px' }}>
+                    <div className="site-layout-content">{children}</div>
+                </Content>
+            </AntLayout>
+        </AntLayout>
     );
 };
 
